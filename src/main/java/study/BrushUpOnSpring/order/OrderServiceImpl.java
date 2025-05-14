@@ -1,5 +1,7 @@
 package study.BrushUpOnSpring.order;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import study.BrushUpOnSpring.discount.DiscountPolicy;
 import study.BrushUpOnSpring.discount.FixDiscountPolicy;
 import study.BrushUpOnSpring.discount.RateDiscountPolicy;
@@ -7,6 +9,7 @@ import study.BrushUpOnSpring.member.Member;
 import study.BrushUpOnSpring.member.MemberRepository;
 import study.BrushUpOnSpring.member.MemoryMemberRepository;
 
+@Component
 public class OrderServiceImpl implements OrderService{
 
     /**
@@ -24,6 +27,7 @@ public class OrderServiceImpl implements OrderService{
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
 
+    @Autowired
     public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
