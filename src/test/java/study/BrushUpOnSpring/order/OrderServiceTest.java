@@ -4,10 +4,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import study.BrushUpOnSpring.AppConfig;
-import study.BrushUpOnSpring.member.Grade;
-import study.BrushUpOnSpring.member.Member;
-import study.BrushUpOnSpring.member.MemberService;
-import study.BrushUpOnSpring.member.MemberServiceImpl;
+import study.BrushUpOnSpring.discount.FixDiscountPolicy;
+import study.BrushUpOnSpring.member.*;
 
 public class OrderServiceTest {
 
@@ -31,4 +29,15 @@ public class OrderServiceTest {
         Order order = orderService.createOrder(memberId, "itemA", 10000);
         Assertions.assertThat(order.getDiscountPrice()).isEqualTo(1000);
     }
+
+    // field 의존 관계 주입 예제 테스트
+//    @Test
+//    void fieldInjectionTest() {
+//        OrderServiceImpl orderService = new OrderServiceImpl();
+//
+//        orderService.setMemberRepository(new MemoryMemberRepository());
+//        orderService.setDiscountPolicy(new FixDiscountPolicy());
+//
+//        orderService.createOrder(1L, "itemA", 10000);
+//    }
 }

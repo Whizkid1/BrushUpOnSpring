@@ -1,10 +1,12 @@
 package study.BrushUpOnSpring.discount;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import study.BrushUpOnSpring.member.Grade;
 import study.BrushUpOnSpring.member.Member;
 
 @Component
+@Primary
 public class RateDiscountPolicy implements DiscountPolicy {
 
     private int discountPercent = 10;

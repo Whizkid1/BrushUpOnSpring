@@ -1,5 +1,6 @@
 package study.BrushUpOnSpring.order;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import study.BrushUpOnSpring.discount.DiscountPolicy;
@@ -10,6 +11,7 @@ import study.BrushUpOnSpring.member.MemberRepository;
 import study.BrushUpOnSpring.member.MemoryMemberRepository;
 
 @Component
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
 
     /**
@@ -27,11 +29,15 @@ public class OrderServiceImpl implements OrderService{
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
 
+    // Lombok을 통해 더 간편하게 생성자 의존 주입
+    /**
     @Autowired
     public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
     }
+     */
+
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
