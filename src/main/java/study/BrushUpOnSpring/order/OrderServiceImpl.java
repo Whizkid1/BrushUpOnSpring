@@ -12,7 +12,7 @@ import study.BrushUpOnSpring.member.MemoryMemberRepository;
 
 @Component
 @RequiredArgsConstructor
-public class OrderServiceImpl implements OrderService{
+public class OrderServiceImpl implements OrderService {
 
     /**
     private final MemberRepository memberRepository = new MemoryMemberRepository();

@@ -2,15 +2,16 @@ package study.BrushUpOnSpring.scope;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.inject.Provider;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Scope;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class SingletonWithPrototypeTest1 {
+public class SingletonWithPrototypeTest2 {
     @Test
     void prototypeFind() {
 //        AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(PrototypeBean.class);
@@ -28,41 +29,19 @@ public class SingletonWithPrototypeTest1 {
         assertThat(prototypeBean2.getCount()).isEqualTo(1);*/
         ClientBean clientBean2 = ac.getBean(ClientBean.class);
         int count2 = clientBean2.logic();
-        assertThat(count2).isEqualTo(2);
+        assertThat(count2).isEqualTo(1);
     }
 
     @Scope("singleton")
     static class ClientBean {
-        /**
-         * 이 방식은 최초로 호출된 프로토 빈이 종속되게 됨
-         * 생성자 주입은 객채 생성 + 의존관계 주입이 동시에 일어나기 때문
-         * 필드 주입을 통해 해결할 수 있지만, 이 방식 또한 몇가지 문제점이 있음
-         * 1. final을 사용하지 못해 불변성 보장받지 못함 -> 프로토 빈이기 때문에 이것은 상관 없음
-         * 2. 프레임워크(DI 프레임워크, 스프링)에 강한 종속
-         * 3,테스트 코드 작성 시 2번의 이유로 스프링이 필수로 포함되야함.
-         *  즉, 테스트를 위해 무거운 프레임워크(프로젝트 단위 규모)로 가동해야함
-         * 4. 순환 의존의 문제 -> 오버플로우 발생
-         * class ClientBean2 예제 구현
-         * */
-        private final PrototypeBean prototypeBean;
+
         @Autowired
-        public ClientBean(PrototypeBean prototypeBean) {
-            this.prototypeBean = prototypeBean;
-        }
+//        private ObjectProvider<PrototypeBean> prototypeBeanProvider;
+        private Provider<PrototypeBean> provider;
 
         public int logic() {
-            prototypeBean.addCount();
-            int count = prototypeBean.getCount();
-            return count;
-        }
-    }
-    @Scope("singleton2")
-    static class ClientBean2 {
-        @Autowired
-        private ApplicationContext ac;
-
-        public int logic() {
-            PrototypeBean prototypeBean = ac.getBean(PrototypeBean.class);
+//            PrototypeBean prototypeBean = prototypeBeanProvider.getObject();
+            PrototypeBean prototypeBean = provider.get();
             prototypeBean.addCount();
             int count = prototypeBean.getCount();
             return count;

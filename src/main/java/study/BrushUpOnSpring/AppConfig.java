@@ -9,7 +9,7 @@ import study.BrushUpOnSpring.member.*;
 import study.BrushUpOnSpring.order.OrderService;
 import study.BrushUpOnSpring.order.OrderServiceImpl;
 
-@Configuration
+//@Configuration // AutoAppConfig로 대체
 public class AppConfig {
 
     // 역할과 구현을 명확하게 구분하고 가시성을 높이기 위해 리팩토링
