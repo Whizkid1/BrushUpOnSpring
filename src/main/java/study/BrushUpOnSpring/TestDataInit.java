@@ -1,11 +1,10 @@
 package study.BrushUpOnSpring;
 
-
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import study.BrushUpOnSpring.domain.item.Item;
 import study.BrushUpOnSpring.domain.item.ItemRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 
 @Component
