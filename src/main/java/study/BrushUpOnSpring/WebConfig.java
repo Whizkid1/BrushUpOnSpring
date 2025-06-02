@@ -1,61 +1,50 @@
 package study.BrushUpOnSpring;
 
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.Filter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import study.BrushUpOnSpring.web.argumentresolver.LoginMemberArgumentResolver;
-import study.BrushUpOnSpring.web.filter.LogFilter;
-import study.BrushUpOnSpring.web.filter.LoginCheckFilter;
-import study.BrushUpOnSpring.web.interceptor.LogInterceptor;
-import study.BrushUpOnSpring.web.interceptor.LoginCheckInterceptor;
+import study.BrushUpOnSpring.filter.LogFilter;
+import study.BrushUpOnSpring.interceptor.LogInterceptor;
+import study.BrushUpOnSpring.resolver.MyHandlerExceptionResolver;
 
 import java.util.List;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer { // WebMvcConfigurer 구현은 spring interceptor 등록을 위한
-
-
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new LoginMemberArgumentResolver());
-    }
+public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LogInterceptor())
                 .order(1)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/css/**", "/*.ico", "/error");
-
-        registry.addInterceptor(new LoginCheckInterceptor())
-                .order(2)
-                .addPathPatterns("/**")
-                .excludePathPatterns(
-                        "/", "/members/add", "/login", "/logout",
-                        "/css/**", "/*.ico", "/error"
+                .addPathPatterns("/**") // 전체 경로에 적용
+                .excludePathPatterns( // 제외 경로
+                        "/css/**", "/*.ico"
+                        , "/error", "/error-page/**" //오류 페이지 경로
                 );
     }
 
-//    @Bean
-    public  FilterRegistrationBean logFilter() {
-        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new LogFilter());
-        filterRegistrationBean.setOrder(1);
-        filterRegistrationBean.addUrlPatterns("/*");
-
-        return filterRegistrationBean;
+    /**
+     * 기본 설정을 유지하면서 추가
+     */
+    @Override
+    public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
+        resolvers.add(new MyHandlerExceptionResolver());
     }
 
 //    @Bean
-    public FilterRegistrationBean loginCheckFilter() {
+    public FilterRegistrationBean logFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new LoginCheckFilter());
-        filterRegistrationBean.setOrder(2);
+
+        filterRegistrationBean.setFilter(new LogFilter());
+        filterRegistrationBean.setOrder(1);
         filterRegistrationBean.addUrlPatterns("/*");
+//        filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST); // default 설정으로 입력 안해도됨
+        filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.ERROR); // 두개의 타입만 필터를 지나감
         return filterRegistrationBean;
     }
 }
