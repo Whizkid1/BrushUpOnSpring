@@ -1,50 +1,25 @@
 package study.BrushUpOnSpring;
 
-import jakarta.servlet.DispatcherType;
-import jakarta.servlet.Filter;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import study.BrushUpOnSpring.filter.LogFilter;
-import study.BrushUpOnSpring.interceptor.LogInterceptor;
-import study.BrushUpOnSpring.resolver.MyHandlerExceptionResolver;
-
-import java.util.List;
+import study.BrushUpOnSpring.converter.IntegerToStringConverter;
+import study.BrushUpOnSpring.converter.IpPortToStringConverter;
+import study.BrushUpOnSpring.converter.StringToIntegerConverter;
+import study.BrushUpOnSpring.converter.StringToIpPortConverter;
+import study.BrushUpOnSpring.formatter.MyNumberFormatter;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LogInterceptor())
-                .order(1)
-                .addPathPatterns("/**") // 전체 경로에 적용
-                .excludePathPatterns( // 제외 경로
-                        "/css/**", "/*.ico"
-                        , "/error", "/error-page/**" //오류 페이지 경로
-                );
-    }
+    public void addFormatters(FormatterRegistry registry) {
+//        registry.addConverter(new StringToIntegerConverter());
+//        registry.addConverter(new IntegerToStringConverter());
+        registry.addConverter(new StringToIpPortConverter());
+        registry.addConverter(new IpPortToStringConverter());
 
-    /**
-     * 기본 설정을 유지하면서 추가
-     */
-    @Override
-    public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
-        resolvers.add(new MyHandlerExceptionResolver());
-    }
-
-//    @Bean
-    public FilterRegistrationBean logFilter() {
-        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-
-        filterRegistrationBean.setFilter(new LogFilter());
-        filterRegistrationBean.setOrder(1);
-        filterRegistrationBean.addUrlPatterns("/*");
-//        filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST); // default 설정으로 입력 안해도됨
-        filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.ERROR); // 두개의 타입만 필터를 지나감
-        return filterRegistrationBean;
+        //추가
+        registry.addFormatter(new MyNumberFormatter());
     }
 }
